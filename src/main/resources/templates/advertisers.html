@@ -1,0 +1,181 @@
+  <!DOCTYPE HTML>
+  <html xmlns:th="http://www.thymeleaf.org">
+  <head>
+      <title>Рекламодатели</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      
+  <!-- Bootstrap core CSS -->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+      <link href="/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <!-- Favicons -->
+      <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+      <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+      <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+      <link rel="manifest" href="/docs/5.0/assets/img/favicons/manifest.json">
+      <link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+      <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
+      <meta name="theme-color" content="#7952b3">
+  <!-- Bootstrap core JS -->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+
+    <style>
+        .bd-placeholder-img 
+        {
+          font-size: 1.125rem;
+          text-anchor: middle;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          user-select: none;
+        }
+
+      @media (min-width: 768px) 
+      {
+        .bd-placeholder-img-lg 
+        {
+          font-size: 3.5rem;
+        }
+      }
+      #footer {
+    position:fixed;
+    bottom:0px;
+    width:100%;
+}
+  
+
+    </style>
+  </head>
+  <body>
+    <header th:insert="blocks/header :: header"></header>
+
+    <div class="album py-5 bg-light">
+      <div class="container">
+        <h1>Рекламодатели</h1>
+          
+          <a href="/addNews">Добавить рекламодателя</a>
+          <a></a>
+        
+        <script>
+
+          function getNews(page, size, desc){
+            let pageNumber = (typeof page !== 'undefined') ?  page : 0;
+	        	let sizeNumber = (typeof size !== 'undefined') ?  size : 2;
+	        	let descDirection = (typeof desc !== 'undefined') ?  desc: false;
+
+            $.ajax({
+		    type : "GET",
+        url : "http://localhost:8081/api/advertisersList",
+        contentType: "application/json; charset=utf-8",
+		    data: { 
+		        page: pageNumber, 
+		        size: sizeNumber,
+		        desc: descDirection
+		    },
+
+        success: function(json) {
+            var tr=[];
+            console.log(json);
+            for (var i = 0; i < json.advertisers.length; i++) {
+            tr.push('<div class="alert alert-info mt-2">');
+            tr.push('<h3>' + json.advertisers[i].title + '</h3>');
+            tr.push('<p>' + json.advertisers[i].full_txt + '</p>');
+            // tr.push('<td><button type="button" class="btn btn-success edit city">Редактировать</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger delete city" id=' + json.advertisers[i].id + '>Удалить</button></td><br><br>');
+            
+            tr.push('<td><a href="/advertisers/id'+json.advertisers[i].id+'" class="btn btn-success edit city">Редактировать</a></td>');
+            tr.push('</div>');
+            }
+            
+            
+            // var trr=[];
+            // for (var i = 0; i < json.totalPages; i++) {
+            //   trr.push('<li class="page-item"><a class="page-link" >'+(i+1)+'</a></li>'); 
+            // }
+            if ($('ul.pagination li').length - 2 != json.totalPages){
+			  	  // build pagination list at the first time loading
+          $('ul.pagination').empty();
+          buildPagination(json.totalPages);
+        }
+          
+        
+//$('.pagination').html(trr.join(''));
+$('#advertisers').html(tr.join(''));
+
+          }
+          });
+          
+        }
+        function buildPagination(totalPages){
+	    // Build paging navigation
+	    let pageIndex = '<li class="page-item"><a class="page-link">Previous</a></li>';
+	    $("ul.pagination").append(pageIndex);
+	    
+	    // create pagination
+	    for(let i=1; i <= totalPages; i++){
+	  	  // adding .active class on the first pageIndex for the loading time
+	  	  if(i==1){
+	      	  pageIndex = "<li class='page-item active'><a class='page-link'>"
+	  				+ i + "</a></li>"            		  
+	  	  } else {
+	      	  pageIndex = "<li class='page-item'><a class='page-link'>"
+		  				+ i + "</a></li>"
+	  	  }
+	  	  $("ul.pagination").append(pageIndex);
+	    }
+	    
+	    pageIndex = '<li class="page-item"><a class="page-link">Next</a></li>';
+	    $("ul.pagination").append(pageIndex);
+  }
+  
+  $(document).on("click", "ul.pagination li a", function() {
+		
+		let desc = false;
+		let val = $(this).text();
+		
+		// click on the NEXT tag
+	  	if(val.toUpperCase()==="NEXT"){
+	  		let activeValue = parseInt($("ul.pagination li.active").text());
+	  		let totalPages = $("ul.pagination li").length - 2; // -2 beacause 1 for Previous and 1 for Next 
+	  		if(activeValue < totalPages){
+	  			let currentActive = $("li.active");
+	  			getNews(activeValue, 2, desc); // get next page value
+	  			// remove .active class for the old li tag
+	  			$("li.active").removeClass("active");
+	  			// add .active to next-pagination li
+	  			currentActive.next().addClass("active");
+	  		}
+	  	} else if(val.toUpperCase()==="PREVIOUS"){
+	  		let activeValue = parseInt($("ul.pagination li.active").text());
+	  		if(activeValue > 1){
+	  			// get the prevsssious page
+	  			getNews(activeValue-2, 2, desc);
+	  			let currentActive = $("li.active");
+	  			currentActive.removeClass("active");
+	  			// add .active to previous-pagination li
+	  			currentActive.prev().addClass("active");
+	  		}
+	  	} else {
+	  		getNews(parseInt(val) - 1, 2,  desc);
+	  		// add focus to the li tag
+	  		$("li.active").removeClass("active");
+	  		$(this).parent().addClass("active");
+	  	}
+	});
+          $(document).ready(function() {
+            getNews();
+          })
+          </script>
+
+        <div id="advertisers" > </div>
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    <footer th:insert="blocks/footer :: footer"></footer>
+  </body>
+  </html>
