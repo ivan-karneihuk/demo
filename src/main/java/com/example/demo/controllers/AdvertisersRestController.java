@@ -21,7 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.models.Advertisers;
+import com.example.demo.models.Campaings;
 import com.example.demo.service.AdvertisersService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 //@CrossOrigin(origins = "*")
@@ -48,19 +53,40 @@ public class AdvertisersRestController
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
     }
 
+    
     @GetMapping("/api/advertisers/{id}")
     public ResponseEntity<Advertisers> getAdvertisers(@PathVariable Long id)
     {
         return new ResponseEntity<Advertisers>(advertisersService.getAdvertisers(id), HttpStatus.OK);
     }
 
+//    @PostMapping("/api/advertisers")
+//    public ResponseEntity<Void> AddPost(@RequestBody Advertisers advertisers)
+//    {
+//        advertisersService.saveAdvertisers(advertisers);
+//        return new ResponseEntity<Void>(HttpStatus.OK);
+//    }
+
     @PostMapping("/api/advertisers")
-    public ResponseEntity<Void> AddPost(@RequestBody Advertisers advertisers)
-    {
-        advertisersService.saveAdvertisers(advertisers);
+    public ResponseEntity<Void> AddPost( @RequestBody String json) { ObjectMapper mapper = new ObjectMapper();
+   
+
+      try {   
+          
+          Map<String, String>  requestParams  = mapper.readValue(json, new TypeReference<Map<String,String>>(){});
+          Advertisers  advertisers  = new Advertisers();
+          advertisersService.saveAdvertisers(advertisers);
+    
+    
+      }
+      catch (JsonMappingException e) {
+                } 
+      catch (JsonProcessingException e) {
+
+        }
+        
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
-
     @PutMapping("/api/advertisers")
     public ResponseEntity<Void> UpdatePost(@RequestBody Advertisers advertisers)
     {

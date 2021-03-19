@@ -24,15 +24,23 @@ public class AdvertisersController
   private AdvertisersRepository advertisersRepository;
 
     @GetMapping("/advertisers")
-    public String news(Model model)
+    public String Advertisers(Model model)
     {
-      Iterable<Advertisers> advertisers = advertisersRepository.findAll();
-      model.addAttribute("advertisers", advertisers); 
+        // Iterable<Advertisers> advertisers = advertisersRepository.findAll();
+        // model.addAttribute("advertisers", advertisers); 
 		  return "advertisers";   
     }
 
+    @GetMapping("/addAdvertisers")
+    public String addAdvertisers(Model model)
+    {
+      Iterable<Advertisers> advertisers = advertisersRepository.findAll();
+      model.addAttribute("advertisers", advertisers); 
+		  return "addAdvertisers";   
+    }
 
-    @GetMapping("/advertisers/id{id}")
+
+    @GetMapping("/advertisers/id={id}")
     public String newsDetails(@PathVariable(value = "id") long id, Model model)
     {
       if(!advertisersRepository.existsById(id))
@@ -44,6 +52,20 @@ public class AdvertisersController
       advertisers.ifPresent(res::add);
       model.addAttribute("advertisers", res);
 		  return "advertisers-details";    
+    }
+
+        @GetMapping("/advertisers/{id}/edit")
+    public String advertisersEdit(@PathVariable(value = "id") long id, Model model)
+    {
+      if(!advertisersRepository.existsById(id))
+      {
+        return "redirect:/advertisers";
+      }
+      Optional<Advertisers> poadvertisersst = advertisersRepository.findById(id);
+      ArrayList <Advertisers> res = new ArrayList<>();
+      poadvertisersst.ifPresent(res::add);
+      model.addAttribute("post", res);
+		  return "advertisers-edit";    
     }
 
 }

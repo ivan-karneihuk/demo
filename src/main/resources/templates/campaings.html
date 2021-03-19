@@ -51,21 +51,21 @@
 
     <div class="album py-5 bg-light">
       <div class="container">
-        <h1>Рекламодатели</h1>
+        <h1>Рекламные компании</h1>
           
-          <a href="/addAdvertisers">Добавить рекламодателя</a>
+          <a href="/addCampaings">Добавить рекламодателя</a>
           <a></a>
         
         <script>
 
-          function getAdvertisers(page, size, desc){
+          function getCampaings(page, size, desc){
             let pageNumber = (typeof page !== 'undefined') ?  page : 0;
 	        	let sizeNumber = (typeof size !== 'undefined') ?  size : 2;
 	        	let descDirection = (typeof desc !== 'undefined') ?  desc: false;
 
             $.ajax({
 		    type : "GET",
-        url : "http://localhost:8081/api/advertisersList",
+        url : "http://localhost:8081/api/campaingsList",
         contentType: "application/json; charset=utf-8",
 		    data: { 
 		        page: pageNumber, 
@@ -76,13 +76,14 @@
         success: function(json) {
             var tr=[];
             console.log(json);
-            for (var i = 0; i < json.advertisers.length; i++) {
+            for (var i = 0; i < json.campaings.length; i++) {
             tr.push('<div class="alert alert-info mt-2">');
-            tr.push('<h3>' + json.advertisers[i].title + '</h3>');
-            tr.push('<p>' + json.advertisers[i].full_txt + '</p>');
+            tr.push('<h3>' + json.campaings[i].title + '</h3>');
+            tr.push('<p>' + json.campaings[i].full_txt + '</p>');
+            tr.push('<img src="'+ json.campaings[i].url +'" width="400" height="300" /><br>');
             // tr.push('<td><button type="button" class="btn btn-success edit city">Редактировать</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger delete city" id=' + json.advertisers[i].id + '>Удалить</button></td><br><br>');
             
-            tr.push('<td><a href="/advertisers/id='+json.advertisers[i].id+'" class="btn btn-success edit city">Подробнее</a></td>');
+            tr.push('<td><a href="/campaings/id'+json.campaings[i].id+'" class="btn btn-success edit city">Подробнее</a></td>');
             tr.push('</div>');
             }
 
@@ -92,7 +93,7 @@
         }
           
         
-$('#advertisers').html(tr.join(''));
+$('#campaings').html(tr.join(''));
 
           }
           });
@@ -132,7 +133,7 @@ $('#advertisers').html(tr.join(''));
 	  		let totalPages = $("ul.pagination li").length - 2; // -2 beacause 1 for Previous and 1 for Next 
 	  		if(activeValue < totalPages){
 	  			let currentActive = $("li.active");
-	  			getAdvertisers(activeValue, 2, desc); // get next page value
+	  			getCampaings(activeValue, 2, desc); // get next page value
 	  			// remove .active class for the old li tag
 	  			$("li.active").removeClass("active");
 	  			// add .active to next-pagination li
@@ -142,25 +143,25 @@ $('#advertisers').html(tr.join(''));
 	  		let activeValue = parseInt($("ul.pagination li.active").text());
 	  		if(activeValue > 1){
 	  			// get the prevsssious page
-	  			getAdvertisers(activeValue-2, 2, desc);
+	  			getCampaings(activeValue-2, 2, desc);
 	  			let currentActive = $("li.active");
 	  			currentActive.removeClass("active");
 	  			// add .active to previous-pagination li
 	  			currentActive.prev().addClass("active");
 	  		}
 	  	} else {
-	  		getAdvertisers(parseInt(val) - 1, 2,  desc);
+	  		getCampaings(parseInt(val) - 1, 2,  desc);
 	  		// add focus to the li tag
 	  		$("li.active").removeClass("active");
 	  		$(this).parent().addClass("active");
 	  	}
 	});
           $(document).ready(function() {
-            getAdvertisers();
+            getCampaings();
           })
           </script>
 
-        <div id="advertisers" > </div>
+        <div id="campaings" > </div>
 
         <nav aria-label="Page navigation example">
           <ul class="pagination">

@@ -16,9 +16,17 @@
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
     <meta name="theme-color" content="#7952b3">
 <!-- Bootstrap core JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+<script type="text/javascript"
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
+<script
+src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+crossorigin="anonymous"></script>
+<script
+src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"
+integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf"
+crossorigin="anonymous"></script>
   <style>
       .bd-placeholder-img 
       {
@@ -50,7 +58,812 @@
 <p></p>
 <br><br>
 <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-auto">
+            <ul class="list-group">
+                <li class="list-group-item"><a href="#"
+                    class="admin-adv">Рекламодатели</a></li>
+                <li class="list-group-item"><a href="#"
+                    class="admin-camp">Рекламные компании</a></li>
+   
+            </ul>
+            <a href="/">Главная</a>
+        </div>
+        <div class="col" id="right_admin"></div>
+        <div class="modal fade" id="exampleModal" tabindex="-1"
+            role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form id="add" action="#" class="">
+                        <div class="modal-header">
+                            <h5 class="modal-title"
+                                id="exampleModalLabel"></h5>
+                            <button type="button" class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body"></div>
+                        <div class="modal-footer">
+                            <div id='msg'></div>
+                            <button type="submit"
+                                class="btn btn-primary" id="addNew">Сохранить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+function getCampaings() {
+    $
+            .getJSON(
+                    'http://localhost:8081/api/campaingsList',
+                    function(json) {
+                        var tr = [];
+                        for (var i = 0; i < json.campaings.length; i++) {
+                            tr.push('<tr>');
+                            tr.push('<td><p>' + json.campaings[i].id
+                                    + '</p></td>');
+                            if (json.campaings[i].advertisers != null) {
+                                tr
+                                        .push('<td><p data-id="'+ json.campaings[i].advertisers.id + '">'
+                                                + json.campaings[i].advertisers.title
+                                                + '</p></td>');
+                            } else {
+                                tr.push('<td><p data-id="">null</p></td>');
+                            }
 
+                            tr.push('<td><p>' + json.campaings[i].title
+                                    + '</p></td>');
+                            tr.push('<td><p>' + json.campaings[i].full_txt
+                                    + '</p></td>');
+                            tr.push('<td><p>' + json.campaings[i].countries
+                                    + '</p></td>');
+                            tr.push('<td><p>' + json.campaings[i].age
+                                    + '</p></td>');
+                            tr.push('<td><p>' + json.campaings[i].languages
+                                    + '</p></td>');
+                            tr.push('<td><img src="'+ json.campaings[i].url 
+                                +'" width="100" height="80" /></td>');
+                            tr
+                                    .push('<td><button type="button" class="btn btn-success edit campaings">Редактировать</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger delete campaings" id=' + json.campaings[i].id + '>Удалить</button></td>');
+                            tr.push('</tr>');
+                        }
+
+                        $('#right_admin')
+                                .html(
+                                        '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Добавить новго рекламодателя</button> <table class="table shadow "><thead class="thead-dark"><tr><th >Id</th><th  >Рекламодатель</th><th>Название</th><th  class="w-25">Описание</th><th  >Возраст</th><th  >Страны</th><th  >Языки</th><th  >Url</th><th  class="w-25">Действие</th></tr></thead><tbody>'
+                                                + tr.join('')
+                                                + '</tbody></table>');
+                        $('.modal-body')
+                                .html(
+                                        '<div class="form-group"> <label for="name">Название</label><input type="text" class="form-control" id="name" name="name"> <label for="name">Описание</label><textarea class="form-control" id="full_txt" name="full_txt"></textarea> <label for="age">Возраст</label><input type="text" class="form-control" id="age" name="age"><label for="countries">Страны</label><input type="text" class="form-control" id="countries" name="countries"><label for="languages">Языки</label><input type="languages" class="form-control" id="languages" name="languages"><label for="languages">Url</label><input type="url" class="form-control" id="url" name="url">');
+                        $
+                                .getJSON(
+                                        'http://localhost:8081/api/advertisersList',
+                                        function(json) {
+                                            var tr2 = [];
+                                            for (var i = 0; i < json.advertisers.length; i++) {
+
+                                                tr2
+                                                        .push('<option value="' + json.advertisers[i].id + '">'
+                                                                + json.advertisers[i].title
+                                                                + '</option>');
+                                            }
+                                            $('.modal-body')
+                                                    .append(
+                                                            '<div class="form-group"> <label for="advertisers">Рекламодатель</label><select class="form-control" id="advertisersCampaings" name="advertisers">'
+                                                                    + tr2
+                                                                            .join('')
+                                                                    + '</select></div>');
+                                        });
+                        $('.modal-body').append('</div>');
+                        $('.modal-title').html(
+                                'Добавление рекламной комании');
+                    })
+    $('#addNew').removeClass();
+    $('#right_admin').removeClass('');
+    $('#right_admin').addClass('campaings');
+
+    $('#addNew').addClass('btn');
+    $('#addNew').addClass('btn-primary');
+    $('#addNew').addClass('btn-campaings');
+};
+
+function getAdvertisers() {
+    $
+            .getJSON(
+                    'http://localhost:8081/api/advertisersList',
+                    function(json) {
+                        var tr = [];
+                        for (var i = 0; i < json.advertisers.length; i++) {
+                            tr.push('<tr>');
+                            
+                              tr.push('<td><p>' + json.advertisers[i].id
+                                      + '</p></td>');
+                              
+                              if (json.advertisers[i].user != null) {
+                                    tr
+                                            .push('<td><p data-id="'+ json.advertisers[i].user.id + '">'
+                                                    + json.advertisers[i].user.username
+                                                    + '</p></td>');
+                                } else {
+                                    tr.push('<td><p data-id="">null</p></td>');
+                                }
+
+                                tr.push('<td><p>' + json.advertisers[i].title
+                                        + '</p></td>');
+                                tr.push('<td><p>' + json.advertisers[i].full_txt
+                                        + '</p></td>');
+                                tr.push('<td><p>' + json.advertisers[i].countries
+                                        + '</p></td>');
+                                tr.push('<td><p>' + json.advertisers[i].age
+                                        + '</p></td>');
+                                tr.push('<td><p>' + json.advertisers[i].languages
+                                        + '</p></td>');
+                                        tr.push('<td><img src="'+ json.advertisers[i].url 
+                                +'" width="100" height="80" /></td>');
+                            tr
+                                    .push('<td><button type="button" class="btn btn-success edit advertisers">Редактировать</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger delete advertisers" id=' + json.advertisers[i].id + '>Удалить</button></td>');
+                            tr.push('</tr>');
+                        }
+                        $('#right_admin')
+                                .html(
+                                        '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Добавить новго рекламодателя</button> <table class="table shadow "><thead class="thead-dark"><tr><th >Id</th><th  >Пользователь</th><th >Название</th><th  class="w-25">Описание</th><th  >Возраст</th><th  >Страны</th><th  >Языки</th><th  >Url</th><th  class="w-25">Действие</th></tr></thead><tbody>'
+                                                + tr.join('')
+                                                + '</tbody></table>');
+                          $('.modal-body')
+                          .html(
+                                  '<div class="form-group"> <label for="name">Название</label><input type="text" class="form-control" id="name" name="name"> <label for="name">Описание</label><textarea class="form-control" id="full_txt" name="full_txt"></textarea> <label for="age">Возраст</label><input type="text" class="form-control" id="age" name="age"><label for="countries">Страны</label><input type="text" class="form-control" id="countries" name="countries"><label for="languages">Языки</label><input type="languages" class="form-control" id="languages" name="languages"><label for="languages">Url</label><input type="url" class="form-control" id="url" name="url">');
+                  $
+                          .getJSON(
+                                  'http://localhost:8081/api/userList',
+                                  function(json) {
+                                      var tr2 = [];
+                                      for (var i = 0; i < json.users.length; i++) {
+
+                                          tr2
+                                                  .push('<option value="' + json.users[i].id + '">'
+                                                          + json.users[i].username
+                                                          + '</option>');
+                                      }
+                                      $('.modal-body')
+                                              .append(
+                                                      '<div class="form-group"> <label for="city">Рекламодатель</label><select class="form-control" id="usersAdv" name="users">'
+                                                              + tr2
+                                                                      .join('')
+                                                              + '</select></div>');
+                                  });
+                  $('.modal-body').append('</div>');$('.modal-title').html('Добавление рекламодателя');
+                    })
+    $('#addNew').removeClass();
+    $('#right_admin').removeClass('');
+    $('#right_admin').addClass('advertisers');
+
+    $('#addNew').addClass('btn');
+    $('#addNew').addClass('btn-primary');
+    $('#addNew').addClass('btn-advertisers');
+};
+
+function buildPagination(totalPages) {
+    // Build paging navigation
+    let pageIndex = '<li class="page-item"><a class="page-link">Previous</a></li>';
+    $("ul.pagination").append(pageIndex);
+
+    // create pagination
+    for (let i = 1; i <= totalPages; i++) {
+        // adding .active class on the first pageIndex for the loading time
+        if (i == 1) {
+            pageIndex = "<li class='page-item active'><a class='page-link'>"
+                    + i + "</a></li>"
+        } else {
+            pageIndex = "<li class='page-item'><a class='page-link'>" + i
+                    + "</a></li>"
+        }
+        $("ul.pagination").append(pageIndex);
+    }
+
+    pageIndex = '<li class="page-item"><a class="page-link">Next</a></li>';
+    $("ul.pagination").append(pageIndex);
+}
+$(document)
+        .ready(
+                function() {
+                    $(document).delegate('.admin-adv', 'click',
+                            function(event) {
+                                event.preventDefault();
+                                getAdvertisers();
+                            });
+
+                    $(document).delegate('.admin-camp', 'click',
+                            function(event) {
+                                event.preventDefault();
+                                getCampaings();
+                            });
+                    $(document)
+                            .delegate(
+                                    '#addNew.btn-advertisers',
+                                    'click',
+                                    function(event) {
+                                        event.preventDefault();
+
+                                        var name = $('#name').val();
+
+                                        $
+                                                .ajax({
+                                                    type : "POST",
+                                                    contentType : "application/json; charset=utf-8",
+                                                    url : "http://localhost:8081/api/advertisers",
+                                                    data : JSON.stringify({
+                                                        'title' : name
+                                                    }),
+                                                    cache : false,
+                                                    success : function(
+                                                            result) {
+                                                        $("#msg")
+                                                                .html(
+                                                                        "<span style='color: green'>Рекламодатель успешно добавлен</span>");
+                                                        window
+                                                                .setTimeout(
+                                                                        function() {
+                                                                            getAdvertisers();
+                                                                            $(
+                                                                                    "#msg")
+                                                                                    .html()
+                                                                        },
+                                                                        1000)
+                                                    },
+                                                    error : function(err) {
+                                                        $("#msg")
+                                                                .html(
+                                                                        "<span style='color: red'>Что-то пошло не так</span>");
+                                                        window
+                                                                .setTimeout(
+                                                                        function() {
+                                                                            $(
+                                                                                    "#msg")
+                                                                                    .html()
+                                                                        },
+                                                                        1000);
+                                                    }
+                                                });
+                                    });
+                    $(document)
+                            .delegate(
+                                    '.delete.advertisers',
+                                    'click',
+                                    function() {
+                                        if (confirm('Вы действительно хотите удалить запись?')) {
+                                            var id = $(this).attr('id');
+                                            var parent = $(this).parent()
+                                                    .parent();
+                                            $
+                                                    .ajax({
+                                                        type : "DELETE",
+                                                        url : "http://localhost:8081/api/advertisers/"
+                                                                + id,
+                                                        cache : false,
+                                                        success : function() {
+                                                            parent
+                                                                    .fadeOut(
+                                                                            'slow',
+                                                                            function() {
+                                                                                $(
+                                                                                        this)
+                                                                                        .remove();
+                                                                            });
+                                                            getAdvertisers()
+                                                        },
+                                                        error : function() {
+                                                            $('#err')
+                                                                    .html(
+                                                                            '<span style=\'color:red; font-weight: bold; font-size: 30px;\'>Ошибка удаления записи')
+                                                                    .fadeIn()
+                                                                    .fadeOut(
+                                                                            4000,
+                                                                            function() {
+                                                                                $(
+                                                                                        this)
+                                                                                        .remove();
+                                                                            });
+                                                        }
+                                                    });
+                                        }
+                                    });
+                    $(document)
+                            .delegate(
+                                    '.edit.advertisers',
+                                    'click',
+                                    function() {
+                                        var parent = $(this).parent()
+                                                .parent();
+                                        var id = parent.children(
+                                                "td:nth-child(1)")
+                                                .children("p");
+                                        var user = parent.children("td:nth-child(2)");
+                                        var userid = parent.children("td:nth-child(2)").children("p").data('id');
+                                        var name = parent
+                                                .children("td:nth-child(3)");
+                                         var full_txt = parent
+                                         .children("td:nth-child(4)");
+                                            var age = parent
+                                            .children("td:nth-child(5)");
+                                            var countries = parent
+                                            .children("td:nth-child(6)");
+                                            var languages = parent
+                                            .children("td:nth-child(7)");
+                                            var url = parent
+                                            .children("td:nth-child(8)");
+                                        var buttons = parent
+                                                .children("td:nth-child(9)");
+                                        console.log(name);
+                                        name
+                                                .html("<input type='text' class='form-control'  value='"
+                                                        + name
+                                                                .children(
+                                                                        "p")
+                                                                .html()
+                                                        + "'/>");
+                                        countries
+                                         .html("<input type='text' class='form-control'   value='"
+                                                 + countries
+                                                         .children(
+                                                                 "p")
+                                                         .html()
+                                                 + "'/>");
+                                         age
+                                         .html("<input type='text' class='form-control'  value='"
+                                                 + age
+                                                         .children(
+                                                                 "p")
+                                                         .html()
+                                                 + "'/>");
+                                         languages
+                                         .html("<input type='text' class='form-control'  value='"
+                                                 + languages
+                                                         .children(
+                                                                 "p")
+                                                         .html()
+                                                 + "'/>");
+                                         url
+                                         .html("<input type='text' class='form-control'  value='"
+                                                 + url
+                                                         .children(
+                                                                 "p")
+                                                         .html()
+                                                 + "'/>");
+                                        user.html ('<select class="form-control"  name="users">'+$('#usersAdv').html()+'</select>');
+                                            $(user).children("select").val(userid);
+                                            
+                                            full_txt.html("<textarea class='form-control' >" + full_txt.children("p").html() + "</textarea>");
+                                        buttons
+                                                .html('<button type="button" class="btn btn-success save advertisers" ">Сохранить</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger delete advertisers" id='
+                                                        + id.html()
+                                                        + '>Удалить</button>');
+                                    });
+                    $(document)
+                            .delegate(
+                                    '.save.advertisers',
+                                    'click',
+                                    function() {
+                                        var parent = $(this).parent()
+                                                .parent();
+                                        var parent = $(this).parent()
+                                        .parent();
+                                var id = parent.children(
+                                        "td:nth-child(1)")
+                                        .children("p");
+                                var user = parent.children("td:nth-child(2)");
+                                var userid = parent.children("td:nth-child(2)").children("p").data('id');
+                                var name = parent
+                                        .children("td:nth-child(3)");
+                                 var full_txt = parent
+                                 .children("td:nth-child(4)");
+                                    var age = parent
+                                    .children("td:nth-child(5)");
+                                    var countries = parent
+                                    .children("td:nth-child(6)");
+                                    var languages = parent
+                                    .children("td:nth-child(7)");
+                                    var url = parent
+                                    .children("td:nth-child(8)");
+                                var buttons = parent
+                                        .children("td:nth-child(9)");
+
+                                        $
+                                                .ajax({
+                                                    type : "PUT",
+                                                    contentType : "application/json; charset=utf-8",
+                                                    url : "http://localhost:8081/api/advertisers",
+                                                    data : JSON
+                                                            .stringify({
+                                                                'id' : id
+                                                                        .html(),
+                                                                'title' : name
+                                                                        .children("input[type=text]")
+                                                                        .val(),
+                                                                'age' : age
+                                                                        .children("input[type=text]")
+                                                                        .val(),
+                                                                'countries' : countries
+                                                                        .children("input[type=text]")
+                                                                        .val(),
+                                                                'full_txt' : full_txt.children("textarea").val(),
+                                                                'languages' : languages
+                                                                        .children("input[type=text]")
+                                                                        .val(),
+                                                                 'url' : url
+                                                                        .children("input[type=text]")
+                                                                        .val(),
+                                                                'user':({"id":user.children('select').find(":selected").val(),"username":user.children('select').find(":selected").html()})}),
+                                                    cache : false,
+                                                    success : function() {
+                                                        name
+                                                                .html('<p>'
+                                                                        + name
+                                                                                .children(
+                                                                                        "input[type=text]")
+                                                                                .val()
+                                                                        + '</p>');
+                                                        full_txt.html('<p>'+full_txt.children("textarea").val()+'</p>');
+                                                        user.html('<p data-id="'+user.children('select').find(":selected").val()+'">'+user.children('select').find(":selected").html()+'</p>');
+                                                        url.html('<p>'
+                                                                + url
+                                                                        .children(
+                                                                                "input[type=text]")
+                                                                        .val()
+                                                                + '</p>');
+                                                        age.html('<p>'
+                                                                + age
+                                                                        .children(
+                                                                                "input[type=text]")
+                                                                        .val()
+                                                                + '</p>');
+                                                        languages
+                                                            .html('<p>'
+                                                                    + languages
+                                                                            .children(
+                                                                                    "input[type=text]")
+                                                                            .val()
+                                                                    + '</p>');
+                                                        countries
+                                                        .html('<p>'
+                                                                + countries
+                                                                        .children(
+                                                                                "input[type=text]")
+                                                                        .val()
+                                                                + '</p>');
+                                                    
+                                                        buttons
+                                                                .html('<button type="button" class="btn btn-success edit advertisers" id="'
+                                                                        + id
+                                                                                .html()
+                                                                        + '">Редактировать</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger delete advertisers" id='
+                                                                        + id
+                                                                                .html()
+                                                                        + '>Удалить</button>');
+                                                    },
+                                                    error : function() {
+                                                        $('#err')
+                                                                .html(
+                                                                        '<span style=\'color:red; font-weight: bold; font-size: 30px;\'>Ошибка обновления записи')
+                                                                .fadeIn()
+                                                                .fadeOut(
+                                                                        4000,
+                                                                        function() {
+                                                                            $(
+                                                                                    this)
+                                                                                    .remove();
+                                                                        });
+                                                    }
+                                                });
+                                    });
+                    $(document)
+                            .delegate(
+                                    '#addNew.btn-campaings',
+                                    'click',
+                                    function(event) {
+                                        event.preventDefault();
+
+                                        var name = $('#name').val();
+                                        var full_txt = $('#full_txt').val();
+
+                                        var age = $('#age').val();
+                                        var countries = $('#countries')
+                                                .val();
+
+                                        var languages = $('#languages')
+                                                .val();
+                                        var id_advertisers = $(
+                                                '#advertisersCampaings')
+                                                .find(":selected").val();
+                                        var json = {
+                                            "title" : name,
+                                            "full_txt" : full_txt,
+                                            "age" : age,
+                                            "countries" : countries,
+                                            "languages" : languages,
+                                            "id_advertisers" : id_advertisers
+                                        };
+                                        $
+                                                .ajax({
+                                                    type : "POST",
+                                                    contentType : "application/json; charset=utf-8",
+                                                    url : "http://localhost:8081/api/campaings",
+                                                    data : JSON
+                                                            .stringify(json),
+                                                    cache : false,
+                                                    success : function(
+                                                            result) {
+                                                        $("#msg")
+                                                                .html(
+                                                                        "<span style='color: green'>Рекламодатель успешно добавлен</span>");
+                                                        window
+                                                                .setTimeout(
+                                                                        function() {
+                                                                            getCampaings();
+                                                                            $(
+                                                                                    "#msg")
+                                                                                    .html()
+                                                                        },
+                                                                        1000)
+                                                    },
+                                                    error : function(err) {
+                                                        $("#msg")
+                                                                .html(
+                                                                        "<span style='color: red'>Что-то пошло не так</span>");
+                                                        window
+                                                                .setTimeout(
+                                                                        function() {
+                                                                            $(
+                                                                                    "#msg")
+                                                                                    .html()
+                                                                        },
+                                                                        1000);
+                                                    }
+                                                });
+                                    });
+                    $(document)
+                            .delegate(
+                                    '.delete.campaings',
+                                    'click',
+                                    function() {
+                                        if (confirm('Вы действительно хотите удалить запись?')) {
+                                            var id = $(this).attr('id');
+                                            var parent = $(this).parent()
+                                                    .parent();
+                                            $
+                                                    .ajax({
+                                                        type : "DELETE",
+                                                        url : "http://localhost:8081/api/campaings/"
+                                                                + id,
+                                                        cache : false,
+                                                        success : function() {
+                                                            parent
+                                                                    .fadeOut(
+                                                                            'slow',
+                                                                            function() {
+                                                                                $(
+                                                                                        this)
+                                                                                        .remove();
+                                                                            });
+                                                            getCampaings()
+                                                        },
+                                                        error : function() {
+                                                            $('#err')
+                                                                    .html(
+                                                                            '<span style=\'color:red; font-weight: bold; font-size: 30px;\'>Ошибка удаления записи')
+                                                                    .fadeIn()
+                                                                    .fadeOut(
+                                                                            4000,
+                                                                            function() {
+                                                                                $(
+                                                                                        this)
+                                                                                        .remove();
+                                                                            });
+                                                        }
+                                                    });
+                                        }
+                                    });
+                    $(document)
+                            .delegate(
+                                    '.edit.campaings',
+                                    'click',
+                                    function() {
+                                          var parent = $(this).parent()
+                                          .parent();
+                                  var id = parent.children(
+                                          "td:nth-child(1)")
+                                          .children("p");
+                                var name = parent
+                                          .children("td:nth-child(3)");
+                                   var full_txt = parent
+                                   .children("td:nth-child(4)");
+                                      var age = parent
+                                      .children("td:nth-child(5)");
+                                      var countries = parent
+                                      .children("td:nth-child(6)");
+                                      var languages = parent
+                                      .children("td:nth-child(7)");
+                                      var url = parent
+                                      .children("td:nth-child(8)");
+                                      full_txt.html("<textarea class='form-control' >" + full_txt.children("p").html() + "</textarea>");
+                                      
+                                  var buttons = parent.children("td:nth-child(9)");
+                                        var adv = parent.children("td:nth-child(2)");
+                                        var advid = parent.children("td:nth-child(2)").children("p").data('id');
+                                        countries
+                                        .html("<input type='text' class='form-control'   value='"
+                                                + countries
+                                                        .children(
+                                                                "p")
+                                                        .html()
+                                                + "'/>");
+                                        age
+                                        .html("<input type='text' class='form-control'  value='"
+                                                + age
+                                                        .children(
+                                                                "p")
+                                                        .html()
+                                                + "'/>");
+                                        languages
+                                        .html("<input type='text' class='form-control'  value='"
+                                                + languages
+                                                        .children(
+                                                                "p")
+                                                        .html()
+                                                + "'/>");
+                                        url
+                                        .html("<input type='text' class='form-control'  value='"
+                                                + url
+                                                        .children(
+                                                                "p")
+                                                        .html()
+                                                + "'/>");
+                                    
+                                        
+                                    
+                                        name
+                                                .html("<input type='text' class='form-control'   value='"
+                                                        + name
+                                                                .children(
+                                                                        "p")
+                                                                .html()
+                                                        + "'/>");
+                                        adv.html ('<select class="form-control"  name="advertisers">'+$('#advertisersCampaings').html()+'</select>');
+                                        $(adv).children("select").val(advid);
+                                    
+                                        buttons
+                                                .html('<button type="button" class="btn btn-success save campaings" ">Сохранить</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger delete campaings" id='
+                                                        + id.html()
+                                                        + '>Удалить</button>');
+                                    });
+                    $(document)
+                            .delegate(
+                                    '.save.campaings',
+                                    'click',
+                                    function() {
+                                        var parent = $(this).parent()
+                                                .parent();
+
+                                           var id = parent.children(
+                                              "td:nth-child(1)")
+                                              .children("p");
+                                    var name = parent
+                                              .children("td:nth-child(3)");
+                                       var full_txt = parent
+                                       .children("td:nth-child(4)");
+                                          var age = parent
+                                          .children("td:nth-child(5)");
+                                          var countries = parent
+                                          .children("td:nth-child(6)");
+                                          var languages = parent
+                                          .children("td:nth-child(7)");
+                                          var url = parent
+                                          .children("td:nth-child(8)");
+                                      var buttons = parent
+                                              .children("td:nth-child(9)");
+                                      var adv = parent.children("td:nth-child(2)");
+                                 
+                                        $
+                                                .ajax({
+                                                    type : "PUT",
+                                                    contentType : "application/json; charset=utf-8",
+                                                    url : "http://localhost:8081/api/campaings",
+                                                      data : JSON
+                                                      .stringify({
+                                                          'id' : id
+                                                                  .html(),
+                                                          'title' : name
+                                                                  .children("input[type=text]")
+                                                                  .val(),
+                                                          'age' : age
+                                                                  .children("input[type=text]")
+                                                                  .val(),
+                                                          'countries' : countries
+                                                                  .children("input[type=text]")
+                                                                  .val(),
+                                                          'full_txt' : full_txt.children("textarea").val(),
+                                                          'languages' : languages
+                                                                  .children("input[type=text]")
+                                                                  .val(),
+                                                           'url' : url
+                                                                  .children("input[type=text]")
+                                                                  .val(),
+                                                          'advertisers':({"id":adv.children('select').find(":selected").val(),"title":adv.children('select').find(":selected").html()})}),
+                                              
+                                                    cache : false,
+                                                    success : function() {
+                                                           name
+                                                           .html('<p>'
+                                                                   + name
+                                                                           .children(
+                                                                                   "input[type=text]")
+                                                                           .val()
+                                                                   + '</p>');
+                                                   full_txt.html('<p>'+full_txt.children("textarea").val()+'</p>');
+                                                   adv.html('<p data-id="'+adv.children('select').find(":selected").val()+'">'+adv.children('select').find(":selected").html()+'</p>');
+                                                   url.html('<p>'
+                                                           + url
+                                                                   .children(
+                                                                           "input[type=text]")
+                                                                   .val()
+                                                           + '</p>');
+                                                   age.html('<p>'
+                                                           + age
+                                                                   .children(
+                                                                           "input[type=text]")
+                                                                   .val()
+                                                           + '</p>');
+                                                   languages
+                                                       .html('<p>'
+                                                               + languages
+                                                                       .children(
+                                                                               "input[type=text]")
+                                                                       .val()
+                                                               + '</p>');
+                                                   countries
+                                                   .html('<p>'
+                                                           + countries
+                                                                   .children(
+                                                                           "input[type=text]")
+                                                                   .val()
+                                                           + '</p>');
+                                               
+                                                        
+                                                        buttons
+                                                                .html('<button type="button" class="btn btn-success edit campaings" id="'
+                                                                        + id
+                                                                                .html()
+                                                                        + '">Редактировать</button>&nbsp;&nbsp;<button type="button" class="btn btn-danger delete campaings" id='
+                                                                        + id
+                                                                                .html()
+                                                                        + '>Удалить</button>');
+                                                    },
+                                                    error : function() {
+                                                        $('#err')
+                                                                .html(
+                                                                        '<span style=\'color:red; font-weight: bold; font-size: 30px;\'>Ошибка обновления записи')
+                                                                .fadeIn()
+                                                                .fadeOut(
+                                                                        4000,
+                                                                        function() {
+                                                                            $(
+                                                                                    this)
+                                                                                    .remove();
+                                                                        });
+                                                    }
+                                                });
+                                    });
+                });
+</script>
+</div>
 
   <footer id="footer" th:insert="blocks/footer :: footer" ></footer>
 <body>

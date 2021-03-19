@@ -52,9 +52,9 @@
     <h1>Редактировать статью</h1>
   <div th:each="el : ${post}">
     <form method="post">
-      <input type="text" th:value="${el.title}" name="title" placeholder="Введите наzвание статьи" class="form-control"><br> 
-      <input type="text" th:value="${el.anons}" name="anons" placeholder="Краткую информацию" class="form-control"><br> 
-      <textarea name="full_txt"  placeholder="Статья" class="form-control"th:text="${el.full_txt}"/><br>
+      <input type="text" th:value="${el.title}" name="title" placeholder="наzвание" class="form-control"><br> 
+      <input type="text" th:value="${el.url}" name="anons" placeholder="картинка" class="form-control"><br> 
+      <textarea name="full_txt"  placeholder="описание" class="form-control"th:text="${el.full_txt}"/><br>
       <button tupe="submit" class="btn btn-success">Обновить</button>
     </form>
   </div>

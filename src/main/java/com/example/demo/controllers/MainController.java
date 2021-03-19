@@ -1,5 +1,7 @@
 package com.example.demo.controllers;
 
+import java.io.File;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +13,19 @@ public class MainController {
 	@GetMapping("/")
 	public String home(Model model) 
 	{
-		model.addAttribute("title", "Главная страница");
+        model.addAttribute("title", "Главная страница");
+        // File database = new File(dbLocation);
+        // DatabaseReader dbReader = new DatabaseReader.Builder(database).build();
 		return "home";
 	}
+
+    @GetMapping("/admin")
+    public String admin(Model model) 
+    {
+        model.addAttribute("title", "Админка");
+        return "admin";
+    
+    }
 
 
 }

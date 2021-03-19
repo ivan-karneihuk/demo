@@ -33,7 +33,7 @@ import com.example.demo.role.User;
 
             if (userFromDb != null)
             {
-                model.put("message", "Польzователь соzдан");
+                model.put("message", "Польzователь создан");
                 return "registr";
             }
 
@@ -41,7 +41,7 @@ import com.example.demo.role.User;
             user.setRoles(Collections.singleton(Role.USER));
             userRepo.save(user);
 
-            return "redirect:/home";
+            return "redirect:/";
         }
 
         @GetMapping("@{/registr}")

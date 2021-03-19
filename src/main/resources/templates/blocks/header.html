@@ -23,20 +23,26 @@
                     </li>
 
                     <li class="nav-item">
-                    <a class="nav-link" href="/contacts">Рекламные <br> преложения</a>
+                    <a class="nav-link" href="/campaings">Рекламные <br> преложения</a>
                     </li>
 
                     <li class="nav-item" >
-                    <a class="nav-link" href="@{/login}">Авториzация</a>
+                    <a class="nav-link" href="@{/login}">Авторизация</a>
                     </li>
 
                     <li class="nav-item" >
-                        <a class="nav-link" href="@{/logout}">Авториzация</a>
+                        <a class="nav-link" href="/registr">Регистрация</a>
                         </li>
-                            
+
+                    <form th:action="@{/logout}" method="post">
+                    <li class="nav-item">
+                        <a class="nav-link" href="@{/logout}" method="post">Выход</a>
+                        </li>
+                    </form>    
+
                         <div >
                         <form th:action="@{/logout}" method="post">
-                            <input type="submit" value="Выйти"/>
+                            <input class="nav-link" type="submit" value="Выйти"/>
                         </form>
                         </div>
 

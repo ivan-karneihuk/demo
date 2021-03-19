@@ -1,14 +1,5 @@
 package com.example.demo.models;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.*;
 
 
@@ -18,18 +9,24 @@ import javax.persistence.*;
 @Table(name = "Campaings")
 public class Campaings {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // @ManyToOne(cascade = CascadeType.PERSIST)
-    // @ElementCollection(targetClass = Advertisers.class, fetch = FetchType.EAGER)
-    // @CollectionTable(name = "idAdver", joinColumns = @JoinColumn(name = "fkIdAdver"))
-    // @Enumerated(EnumType.STRING)
-    // private Advertisers advertisers;
+    @ManyToOne(targetEntity = Advertisers.class, cascade = CascadeType.REMOVE,
+            fetch = FetchType.EAGER)
+           @JoinColumn(name = "id_advertisers", foreignKey =
+           @ForeignKey(name = "fk_Advertisers_campaings"))
+    
+    private Advertisers advertisers;
+
     private String title;
     @Column(columnDefinition = "TEXT")
     private String full_txt;
     @Column(columnDefinition = "boolean default false")
     private boolean flagDel;
+    private String countries;
+    private String age;
+    private String languages;
+    private String Url;
 
     public Long getId() {
         return id;
@@ -58,10 +55,13 @@ public class Campaings {
     public Campaings() {
     }
 
-    public Campaings(String title, String full_txt) {
+    public Campaings(String title, String full_txt, String countries, String age, String languages, String Url) {
         this.title = title;
-
+        this.countries = countries;
         this.full_txt = full_txt;
+        this.age = age;
+        this.languages = languages;
+        this.Url = Url;
     }
 
     public boolean getFlagDel() {
@@ -72,12 +72,44 @@ public class Campaings {
         this.flagDel = flagDel;
     }
 
-    // public Advertisers getAdvertisers() {
-    //     return advertisers;
-    // }
+    public String getCountries() {
+        return countries;
+    }
 
-    // public void setAdvertisers(Advertisers advertisers) {
-    //     this.advertisers = advertisers;
-    // }
+    public void setCountries(String countries) {
+        this.countries = countries;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(String languages) {
+        this.languages = languages;
+    }
+
+    public String getUrl() {
+        return Url;
+    }
+
+    public void setUrl(String url) {
+        Url = url;
+    }
+
+ public Advertisers getAdvertisers() {
+         return advertisers;
+     }
+
+     public void setAdvertisers(Advertisers advertisers) {
+         this.advertisers = advertisers;
+     }
 
 }

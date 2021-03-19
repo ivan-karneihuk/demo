@@ -28,9 +28,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 		.csrf()
 		.disable()	
 			.authorizeRequests()
-		//			.antMatchers("/addnews").hasRole("Admin")
-				.antMatchers("/", "/registr", "/home", "/advertisers", "/advertisers/{id}", "/advertisersList", "/api/*", 
-				"/api/newsList"	).permitAll()
+				.antMatchers("/admin/*","/admin").hasRole("Admin")
+				.antMatchers("/", "/registr", "/home", "/advertisers", "/campaings","/advertisers/{id}", "/advertisersList", "/api/*", 
+				"/api/newsList", "/admin/*","/admin", "/api/campaingsList/{id}", "/registr"	).permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
@@ -54,7 +54,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
                 .usersByUsernameQuery("select username, password, active from usr where username=?")
                 .authoritiesByUsernameQuery("select u.username, ur.roles from usr u inner join user_role ur on u.id = ur.user_id where u.username=?");
     }
-
-
 
 }
